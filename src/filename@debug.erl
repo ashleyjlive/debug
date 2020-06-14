@@ -1,0 +1,22 @@
+-module(filename@debug).
+-include("common.hrl").
+
+-export([site_data/1, 
+         basedir/2]).
+
+site_data(Path) ->
+    basedir(site_data, Path).
+
+basedir(Type, Path) ->
+    case os:type() of
+        {win32, _} ->
+            basedir1(windows, Type, Path);
+        {Os, _} ->
+            basedir1(Os, Type, Path)
+    end.
+
+basedir1(windows, site_data, Path) ->
+    [_|_] = ProgramDta = os:getenv("PROGRAMDATA"),
+    filename:join([ProgramDta, ?AUTHOR_STR, atom_to_list(node())|Path]);
+basedir1(Os, Type, Path) ->
+    filename:basedir(Type, Path, #{os => Os, author => ?AUTHOR_STR}).

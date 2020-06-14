@@ -1,0 +1,4 @@
+-define(APP, debug).
+-define(APP_STR, "debug").
+-define(AUTHOR, parallax).
+-define(AUTHOR_STR, "Parallax").

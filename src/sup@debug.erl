@@ -26,10 +26,28 @@ start_link() ->
 %%                  type => worker(),       % optional
 %%                  modules => modules()}   % optional
 init([]) ->
+    [SysOps,PrimaryCfg,LgrStdH] = 
+        app@debug:start_args([sys_ops,primary_cfg,logger_std_h]),
     SupFlags = #{strategy => one_for_all,
                  intensity => 0,
                  period => 1},
-    ChildSpecs = [],
+    ChildSpecs = 
+        [init_child_spec(PrimaryCfg, SysOps),
+         logger_std_h_child_spec(LgrStdH, SysOps)],
     {ok, {SupFlags, ChildSpecs}}.
+
+init_child_spec(PrimaryCfg, SysOps) ->
+    #{id => init@debug, 
+      start => {init@debug, start_link, [PrimaryCfg, SysOps]},
+      restart => transient,
+      type => worker,
+      modules => [init@debug]}.
+
+logger_std_h_child_spec(LoggerArgs, SysOps) ->
+    #{id => logger_std_h@debug, 
+      start => {logger_std_h@debug, start_link, [LoggerArgs, SysOps]},
+      restart => permanent,
+      type => worker,
+      modules => [logger_std_h@debug]}.
 
 %% internal functions
