@@ -17,6 +17,7 @@ basedir(Type, Path) ->
 
 basedir1(windows, site_data, Path) ->
     [_|_] = ProgramDta = os:getenv("PROGRAMDATA"),
-    filename:join([ProgramDta, ?AUTHOR_STR, atom_to_list(node())|Path]);
+    filename:join(
+        [ProgramDta, ?AUTHOR_STR, "ERL", atom_to_list(node())|Path]);
 basedir1(Os, Type, Path) ->
     filename:basedir(Type, Path, #{os => Os, author => ?AUTHOR_STR}).

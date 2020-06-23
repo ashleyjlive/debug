@@ -20,9 +20,8 @@ stop() ->
    gen_server:stop(?MODULE, stop).
 
 %%% -- gen_server callbacks ----------------------------------------------------
-init(#{level := Level}) ->
-    ok = logger:set_primary_config(level, Level),
-    ok = logger:set_handler_config(default, level, Level),
+init(#{}=Cfg) ->
+    ok = logger:set_primary_config(level, all),
     ignore.
 
 handle_call(stop, _From, State) ->

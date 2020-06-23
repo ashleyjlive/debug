@@ -1,4 +1,4 @@
--module(logger_std_h@debug).
+-module(logger_file_h@debug).
 -behaviour(gen_server).
 
 %%% -- public control --
@@ -21,7 +21,7 @@ stop() ->
 
 %%% -- gen_server callbacks ----------------------------------------------------
 init(#{}=Args) ->
-    ok = logger:set_handler_config(default, Args),
+    ok = logger:add_handler(?MODULE, logger_std_h, Args),
     {ok, Args}.
 
 handle_call(stop, _From, State) ->

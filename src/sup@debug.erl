@@ -26,26 +26,35 @@ start_link() ->
 %%                  type => worker(),       % optional
 %%                  modules => modules()}   % optional
 init([]) ->
-    [SysOps,PrimaryCfg,LgrStdH] = 
-        app@debug:start_args([sys_ops,primary_cfg,logger_std_h]),
+    [SysOps,PrimaryCfg,LgrStdH,LgrFleH] = 
+        app@debug:start_args(
+            [sys_ops,logger_primary,logger_std_h,logger_file_h]),
     SupFlags = #{strategy => one_for_all,
                  intensity => 0,
                  period => 1},
     ChildSpecs = 
         [init_child_spec(PrimaryCfg, SysOps),
-         logger_std_h_child_spec(LgrStdH, SysOps)],
+         logger_std_h_child_spec(LgrStdH, SysOps),
+         logger_file_h_child_spec(LgrFleH, SysOps)],
     {ok, {SupFlags, ChildSpecs}}.
 
-init_child_spec(PrimaryCfg, SysOps) ->
+init_child_spec(#{}=Args, SysOps) when is_list(SysOps) ->
     #{id => init@debug, 
-      start => {init@debug, start_link, [PrimaryCfg, SysOps]},
+      start => {init@debug, start_link, [Args, SysOps]},
       restart => transient,
       type => worker,
       modules => [init@debug]}.
 
-logger_std_h_child_spec(LoggerArgs, SysOps) ->
+logger_file_h_child_spec(#{}=Args, SysOps) when is_list(SysOps) ->
+    #{id => logger_file_h@debug, 
+      start => {logger_file_h@debug, start_link, [Args, SysOps]},
+      restart => permanent,
+      type => worker,
+      modules => [logger_file_h@debug]}.
+
+logger_std_h_child_spec(#{}=Args, SysOps) when is_list(SysOps) ->
     #{id => logger_std_h@debug, 
-      start => {logger_std_h@debug, start_link, [LoggerArgs, SysOps]},
+      start => {logger_std_h@debug, start_link, [Args, SysOps]},
       restart => permanent,
       type => worker,
       modules => [logger_std_h@debug]}.
