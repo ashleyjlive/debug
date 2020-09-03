@@ -37,6 +37,7 @@ handle_info(_Info, State) ->
     {noreply, State}.
 
 terminate(_Reason, _State) ->
+    ok = logger:remove_handler(?MODULE),
     ok.
 
 code_change(_OldVsn, State, _Extra) ->
