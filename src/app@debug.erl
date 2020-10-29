@@ -43,7 +43,7 @@ start_arg(logger_file_h, #{}=Args) ->
     DfltConfig =
         #{type => file, max_no_bytes => 104857600, compress_on_rotate => true,
           max_no_files => 10,
-          file => filename@debug:site_data(["debug", "logger_file_h.log"])},
+          file => filename@debug:site_data(["logger_file_h.log"])},
     DfltArgs = 
         #{config => DfltConfig, 
           formatter => 

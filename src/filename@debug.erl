@@ -10,9 +10,9 @@ site_data(Path) ->
 basedir(Type, Path) ->
     case os:type() of
         {win32, _} ->
-            basedir1(windows, Type, Path);
+            basedir1(windows, Type, [?APP_STR, Path]);
         {Os, _} ->
-            basedir1(Os, Type, Path)
+            basedir1(Os, Type, [?APP_STR, Path])
     end.
 
 basedir1(windows, site_data, Path) ->
