@@ -17,7 +17,7 @@ start_link(Args, SysOps) ->
    gen_server:start_link({local, ?MODULE}, ?MODULE, Args, SysOps).
 
 stop() ->
-   gen_server:stop(?MODULE, stop).
+   gen_server:stop(?MODULE).
 
 %%% -- gen_server callbacks ----------------------------------------------------
 init(#{}=Args) ->

@@ -1,8 +1,16 @@
 -module(filename@debug).
 -include("common.hrl").
 
--export([site_data/1, 
+-export([priv/0,
+         join_priv/1,
+         site_data/1, 
          basedir/2]).
+
+priv() ->
+    code:priv_dir(?APP).
+
+join_priv(Paths) ->
+    filename:join(priv(), Paths).
 
 site_data(Path) ->
     basedir(site_data, Path).

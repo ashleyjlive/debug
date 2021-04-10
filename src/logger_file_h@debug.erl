@@ -21,7 +21,7 @@ stop() ->
 
 %%% -- gen_server callbacks ----------------------------------------------------
 init(#{}=Args) ->
-    ok = logger:add_handler(?MODULE, logger_std_h, Args),
+    ok = logger:add_handler(?MODULE, logger_disk_log_h, Args),
     {ok, Args}.
 
 handle_call(stop, _From, State) ->
