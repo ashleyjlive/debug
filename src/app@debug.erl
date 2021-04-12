@@ -37,6 +37,8 @@ start_arg(logger_primary, #{}=Args) ->
     Args0 = maps:get(logger_primary, Args, #{}),
     DfltArgs = #{level => all},
     maps:merge(DfltArgs, Args0);
+start_arg(logger_std_h, #{logger_std_h := undefined}) ->
+    undefined;
 start_arg(logger_std_h, #{}=Args) ->
     Args0 = maps:get(logger_std_h, Args, #{}),
     DfltArgs = 
@@ -45,6 +47,8 @@ start_arg(logger_std_h, #{}=Args) ->
             {logger_formatter@debug, 
                 #{single_line => false, legacy_header => false}}},
     maps:merge(DfltArgs, Args0);
+start_arg(logger_file_h,  #{logger_file_h := undefined}) ->
+    undefined;
 start_arg(logger_file_h, #{}=Args) ->
     Args0 = maps:get(logger_file_h, Args, #{}),
     DfltConfig =
@@ -56,12 +60,6 @@ start_arg(logger_file_h, #{}=Args) ->
           formatter => 
             {logger_formatter@debug, 
                 #{single_line => false, legacy_header => false}}},
-    maps:merge(DfltArgs, Args0);
-start_arg(promtail, #{}=Args) ->
-    DfltArgs = #{job => "default", 
-                 path => undefined, 
-                 url => undefined},
-    Args0 = maps:get(promtail, Args, #{}),
     maps:merge(DfltArgs, Args0);
 start_arg(sys_ops, #{}=Args) ->
     maps:get(sys_ops, Args, []).

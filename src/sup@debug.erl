@@ -33,30 +33,37 @@ init([]) ->
                  intensity => 0,
                  period => 1},
     ChildSpecs = 
-        [init_child_spec(PrimaryCfg, SysOps),
-         logger_std_h_child_spec(LgrStdH, SysOps),
-         logger_file_h_child_spec(LgrFleH, SysOps)],
+        init_child_spec(
+            PrimaryCfg, SysOps, 
+            logger_std_h_child_spec(
+                LgrStdH, SysOps,
+                logger_file_h_child_spec(
+                    LgrFleH, SysOps, []))),
     {ok, {SupFlags, ChildSpecs}}.
 
-init_child_spec(#{}=Args, SysOps) when is_list(SysOps) ->
-    #{id => init@debug, 
-      start => {init@debug, start_link, [Args, SysOps]},
-      restart => transient,
-      type => worker,
-      modules => [init@debug]}.
+init_child_spec(undefined, _SysOps, Acc) ->
+    Acc;
+init_child_spec(#{}=Args, SysOps, Acc) when is_list(SysOps) ->
+    [#{id => init@debug, 
+       start => {init@debug, start_link, [Args, SysOps]},
+       restart => transient,
+       type => worker,
+       modules => [init@debug]}|Acc].
 
-logger_file_h_child_spec(#{}=Args, SysOps) when is_list(SysOps) ->
-    #{id => logger_file_h@debug, 
-      start => {logger_file_h@debug, start_link, [Args, SysOps]},
-      restart => permanent,
-      type => worker,
-      modules => [logger_file_h@debug]}.
+logger_file_h_child_spec(undefined, _SysOps, Acc) ->
+    Acc;
+logger_file_h_child_spec(#{}=Args, SysOps, Acc) when is_list(SysOps) ->
+    [#{id => logger_file_h@debug, 
+       start => {logger_file_h@debug, start_link, [Args, SysOps]},
+       restart => permanent,
+       type => worker,
+       modules => [logger_file_h@debug]}|Acc].
 
-logger_std_h_child_spec(#{}=Args, SysOps) when is_list(SysOps) ->
-    #{id => logger_std_h@debug, 
-      start => {logger_std_h@debug, start_link, [Args, SysOps]},
-      restart => permanent,
-      type => worker,
-      modules => [logger_std_h@debug]}.
+logger_std_h_child_spec(Args, SysOps, Acc) when is_list(SysOps) ->
+    [#{id => logger_std_h@debug, 
+       start => {logger_std_h@debug, start_link, [Args, SysOps]},
+       restart => transient,
+       type => worker,
+       modules => [logger_std_h@debug]}|Acc].
 
 %% internal functions

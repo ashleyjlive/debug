@@ -22,7 +22,10 @@ stop() ->
 %%% -- gen_server callbacks ----------------------------------------------------
 init(#{}=Args) ->
     ok = logger:set_handler_config(default, Args),
-    {ok, Args}.
+    {ok, Args};
+init(undefined) ->
+    ok = logger:remove_handler(default),
+    ignore.
 
 handle_call(stop, _From, State) ->
     {stop, normal, stopped, State};
